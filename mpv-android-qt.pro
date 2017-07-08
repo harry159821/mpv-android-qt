@@ -52,11 +52,12 @@ DISTFILES += \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat \
-    android/src/com/harry/mpv/QtFullscreenActivity.java
+    android/src/com/harry/mpv/QtFullscreenActivity.java \
+    android/res/values/styles.xml
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
-LIBS += -L$$PWD/lib -lmpv -lswresample -lavutil -lavcodec -lavformat -lswscale -lavfilter -lavdevice
+LIBS += -L$$PWD/android/libs/armeabi-v7a -lmpv -lswresample -lavutil -lavcodec -lavformat -lswscale -lavfilter -lavdevice
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
