@@ -30,6 +30,8 @@ public Q_SLOTS:
 
     void orientationChanged(Qt::ScreenOrientation orientation);
 
+    void checkIntentContent();
+
 private:
     Ui::MainWindow *ui;
 };

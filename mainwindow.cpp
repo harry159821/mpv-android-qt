@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include "androidfiledialog.h"
 
+#include <QAndroidJniObject>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -39,11 +41,27 @@ MainWindow::MainWindow(QWidget *parent) :
         | Qt::LandscapeOrientation
         | Qt::InvertedPortraitOrientation
         | Qt::InvertedLandscapeOrientation);
+
+    QTimer::singleShot(50, this, SLOT(checkIntentContent()));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::checkIntentContent()
+{
+    //handle intent
+    QString fileFromIntent = QAndroidJniObject::callStaticObjectMethod("com.harry.mpv.QtFullscreenActivity"
+                                                                                  , "getUrl"
+                                                                                  , "()Ljava/lang/String;")
+                .toString();
+
+    qDebug() << "open file:" << fileFromIntent;
+    if (!fileFromIntent.isEmpty()) {
+        openFileNameReady(fileFromIntent);
+    }
 }
 
 void MainWindow::openMedia()
