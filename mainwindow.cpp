@@ -8,16 +8,16 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    QString mpvConfigDir = "/storage/emulated/0/mpv/";
+    QString mpvConfigDir = configDir();
     QDir().mkpath(mpvConfigDir);
+    QStringList fileNeedCopy;
 
-    QFile file("assets:/cacert.pem");
-    if (!QFileInfo(mpvConfigDir + "/cacert.pem").isFile()) {
-        file.copy(QString(mpvConfigDir + "/cacert.pem"));
-    }
-    QFile subFile("assets:/subfont.ttf");
-    if (!QFileInfo(mpvConfigDir + "/subfont.ttf").isFile()) {
-        subFile.copy(QString(mpvConfigDir + "/subfont.ttf"));
+    fileNeedCopy << "cacert.pem" << "subfont.ttf" << "stats.lua";
+    foreach(QString fileName, fileNeedCopy) {
+        QFile file("assets:/" + fileName);
+        if (!QFileInfo(mpvConfigDir + fileName).isFile()) {
+            file.copy(QString(mpvConfigDir + fileName));
+        }
     }
 
     ui->setupUi(this);
@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->videoSlider, SIGNAL(sliderMoved(int)), SLOT(seek(int)));
     connect(ui->pushButton, SIGNAL(clicked()), SLOT(openMedia()));
     connect(ui->pushButton2, SIGNAL(clicked()), SLOT(pauseResume()));
-    connect(ui->pushButton2, SIGNAL(clicked()), SLOT(tiggleSub()));
+    connect(ui->pushButton3, SIGNAL(clicked()), SLOT(switchStatScript()));
     connect(m_mpv, SIGNAL(positionChanged(int)), ui->videoSlider, SLOT(setValue(int)));
     connect(m_mpv, SIGNAL(durationChanged(int)), this, SLOT(setSliderRange(int)));
 
@@ -43,11 +43,18 @@ MainWindow::MainWindow(QWidget *parent) :
         | Qt::InvertedLandscapeOrientation);
 
     QTimer::singleShot(50, this, SLOT(checkIntentContent()));
+
+    m_mpv->command(QVariantList() << "load-script" << configDir() + "stats.lua");
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+QString MainWindow::configDir()
+{
+    return "/storage/emulated/0/mpv/";
 }
 
 void MainWindow::checkIntentContent()
@@ -95,7 +102,7 @@ void MainWindow::seek(int pos)
     m_mpv->command(QVariantList() << "seek" << pos << "absolute");
 }
 
-void MainWindow::tiggleSub()
+void MainWindow::switchSub()
 {
     m_mpv->command(QVariantList() << "cycle" << "sub");   
 }
@@ -118,6 +125,7 @@ void MainWindow::orientationChanged(Qt::ScreenOrientation orientation)
         ui->videoSlider->setVisible(false);
         ui->pushButton->setVisible(false);
         ui->pushButton2->setVisible(false);
+        ui->pushButton3->setVisible(false);
         ui->horizontalLayout->setSpacing(0);
     }
     else
@@ -125,6 +133,13 @@ void MainWindow::orientationChanged(Qt::ScreenOrientation orientation)
         ui->videoSlider->setVisible(true);
         ui->pushButton->setVisible(true);
         ui->pushButton2->setVisible(true);
+        ui->pushButton3->setVisible(true);
         ui->horizontalLayout->setSpacing(7);
     }
+}
+
+void MainWindow::switchStatScript()
+{
+    m_mpv->command(QVariantList() << "script-message" << "togglestats");
+    //m_mpv->command(QVariantList() << "load-script" << configDir() + "stats.lua");
 }

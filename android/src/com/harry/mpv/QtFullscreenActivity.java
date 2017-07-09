@@ -26,6 +26,7 @@ public class QtFullscreenActivity extends org.qtproject.qt5.android.bindings.QtA
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
 
+        // https://github.com/wang-bin/QtAV/blob/master/examples/QMLPlayer/main.cpp
         Intent intent = getIntent();
         String action = intent.getAction();
 

@@ -19,6 +19,8 @@ public:
 
     VideoSurface *m_mpv;
 
+    QString configDir();
+
 public Q_SLOTS:
     void openMedia();
     void openFileNameReady(QString);
@@ -26,7 +28,8 @@ public Q_SLOTS:
     void setSliderRange(int);
     
     void pauseResume();
-    void tiggleSub();
+    void switchSub();
+    void switchStatScript();
 
     void orientationChanged(Qt::ScreenOrientation orientation);
 

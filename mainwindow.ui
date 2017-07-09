@@ -55,7 +55,7 @@
          </size>
         </property>
         <property name="text">
-         <string>I'm Just A PushButton</string>
+         <string>Load</string>
         </property>
        </widget>
       </item>
@@ -68,7 +68,20 @@
          </size>
         </property>
         <property name="text">
-         <string>Just Another PushButton</string>
+         <string>Pause</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton3">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Stat</string>
         </property>
        </widget>
       </item>
