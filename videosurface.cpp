@@ -74,6 +74,8 @@ VideoSurface::VideoSurface(QWidget *parent, Qt::WindowFlags f)
     mpv_request_log_messages(mpv, "v");
 
     qDebug() << "initialize mpv all success";
+
+    setAttribute(Qt::WA_AcceptTouchEvents, true);
 }
 
 VideoSurface::~VideoSurface()
@@ -114,6 +116,29 @@ void VideoSurface::paintGL()
     mpv_opengl_cb_draw(mpv_gl, defaultFramebufferObject(), width(), -height());
 }
 
+//bool VideoSurface::touchEvent(QTouchEvent *e)
+//{
+//    switch (e->type())
+//    {
+//        case QEvent::TouchBegin:
+//            break;
+//        case QEvent::TouchEnd:
+//            if(e->touchPoints().size() == 1) {
+//                QPointF pos = e->touchPoints().at(0).pos();
+//                qDebug() << pos;
+//                //auto offset = pos - this->geometry().topLeft();
+//                //if(offset >= QPointF(0,0) && offset <= QPointF(15,15)){
+//                //    qDebug() << "hited top left";
+//                //}
+//            }
+
+//            break;
+//        case QEvent::TouchUpdate:
+//            break;
+//    }
+//    return true;
+//}
+
 void VideoSurface::swapped()
 {
     mpv_opengl_cb_report_flip(mpv_gl, 0);
@@ -131,6 +156,21 @@ void VideoSurface::on_mpv_events()
         }
         handle_mpv_event(event);
     }
+}
+
+void VideoSurface::mouseReleaseEvent(QMouseEvent *event)
+{
+    QPointF pos = event->pos();
+    QRectF rect = this->geometry();
+
+    rect.setWidth(150);
+    rect.setHeight(150);
+
+    if(rect.contains(pos)) {
+        command(QVariantList() << "script-message" << "togglestats");
+    }
+
+    QOpenGLWidget::mouseReleaseEvent(event);
 }
 
 void VideoSurface::handle_mpv_event(mpv_event *event)

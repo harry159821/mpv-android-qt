@@ -29,6 +29,18 @@ protected:
     void initializeGL() Q_DECL_OVERRIDE;
     void paintGL() Q_DECL_OVERRIDE;
 
+//    bool event(QEvent *event)
+//    {
+//        if (event->type() == QEvent::TouchEnd) {
+//            qDebug() << "Get TouchEnd Event";
+//            return touchEvent(static_cast<QTouchEvent*>(event));
+//        }
+//        return QOpenGLWidget::event(event);
+//    }
+//    bool touchEvent(QTouchEvent *e);
+
+    void mouseReleaseEvent(QMouseEvent *event);
+
 public slots:
     void swapped();
     void on_mpv_events();
