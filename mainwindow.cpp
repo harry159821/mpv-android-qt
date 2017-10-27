@@ -3,6 +3,13 @@
 #include "androidfiledialog.h"
 
 #include <QAndroidJniObject>
+#include <QAndroidJniEnvironment>
+#include <jni.h>
+
+#include <qpa/qplatformnativeinterface.h>
+
+#include <android/native_window.h>
+#include <android/native_window_jni.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -69,6 +76,38 @@ void MainWindow::checkIntentContent()
     if (!fileFromIntent.isEmpty()) {
         openFileNameReady(fileFromIntent);
     }
+
+    //init surface
+    QPlatformNativeInterface *nativeInterfaceAPP = QApplication::platformNativeInterface();
+    jobject activity = (jobject)(nativeInterfaceAPP->nativeResourceForIntegration("QtActivity"));
+    QAndroidJniEnvironment * qjniEnv;
+    JNIEnv * jniEnv;
+    JavaVM * jvm = qjniEnv->javaVM();
+    jvm->GetEnv(reinterpret_cast<void**>(&qjniEnv), JNI_VERSION_1_6);
+    jvm->AttachCurrentThread(&jniEnv,NULL);
+
+    jint r_id_content = QAndroidJniObject::getStaticField<jint>("android/R$id", "content");
+
+    QAndroidJniObject view = ((QAndroidJniObject) activity).callObjectMethod("findViewById", "(I)Landroid/view/View;", r_id_content);
+    if (view.isValid()) {
+        QAndroidJniObject child1 = view.callObjectMethod("getChildAt", "(I)Landroid/view/View;", 0);
+        QAndroidJniObject child2 = child1.callObjectMethod("getChildAt", "(I)Landroid/view/View;", 0);
+        if (child2.isValid()) {
+            QAndroidJniObject sHolder = child2.callObjectMethod("getHolder","()Landroid/view/SurfaceHolder;");
+            if (sHolder.isValid()) {
+                QAndroidJniObject theSurface = sHolder.callObjectMethod("getSurface","()Landroid/view/Surface;");
+                if (theSurface.isValid()) {
+                    ANativeWindow* awindow = ANativeWindow_fromSurface(jniEnv, theSurface.object());
+                    qDebug() << "This is a ANativeWindow " << awindow;
+                    WId wid = winId();
+                    qDebug() << "winid returned " << wid;
+                }
+            }
+        } else {
+            qDebug() << "Views are not loaded yet or you are not in the Qt UI Thread";
+        }
+    }
+
 }
 
 void MainWindow::openMedia()
@@ -94,7 +133,7 @@ void MainWindow::openFileNameReady(QString fileName)
         m_mpv->command(QStringList() << "loadfile" << fileName);
     } else {
         qDebug() << "User did not choose file";
-    }
+    }    
 }
 
 void MainWindow::seek(int pos)
@@ -120,6 +159,7 @@ void MainWindow::setSliderRange(int duration)
 
 void MainWindow::orientationChanged(Qt::ScreenOrientation orientation)
 {
+    qDebug("orientationChanged");
     if(orientation == Qt::LandscapeOrientation || orientation == Qt::InvertedLandscapeOrientation)
     {
         ui->videoSlider->setVisible(false);
@@ -135,6 +175,26 @@ void MainWindow::orientationChanged(Qt::ScreenOrientation orientation)
         ui->pushButton2->setVisible(true);
         ui->pushButton3->setVisible(true);
         ui->horizontalLayout->setSpacing(7);
+    }
+}
+
+void MainWindow::changeOrientation()
+{
+    QAndroidJniEnvironment env;
+    QAndroidJniObject activity = QtAndroid::androidActivity();
+    jint orient = activity.callMethod<jint>( "getRequestedOrientation" );
+    if(env->ExceptionCheck())
+    {
+        qDebug() << "exception occured";
+        env->ExceptionClear();
+    }
+
+    orient = !orient;
+    activity.callMethod<void>("setRequestedOrientation", "(I)V", orient);
+    if(env->ExceptionCheck())
+    {
+        qDebug() << "exception occured";
+        env->ExceptionClear();
     }
 }
 

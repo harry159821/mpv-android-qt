@@ -4,7 +4,10 @@
 #
 #-------------------------------------------------
 
-QT       += core gui androidextras
+QT += core gui androidextras
+
+# for private include
+QT += gui-private
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -59,6 +62,8 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 LIBS += -L$$PWD/android/libs/armeabi-v7a -lmpv -lswresample -lavutil -lavcodec -lavformat -lswscale -lavfilter -lavdevice
 
+LIBS += -landroid
+
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
         $$PWD/android/libs/armeabi-v7a/libavcodec.so \
@@ -71,4 +76,7 @@ contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
         $$PWD/android/libs/armeabi-v7a/libswresample.so \
         $$PWD/android/libs/armeabi-v7a/libswscale.so
 }
+
+RESOURCES += \
+    mpv.qrc
 

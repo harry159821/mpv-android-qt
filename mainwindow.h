@@ -1,7 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui>
+//#include <QtGui>
+#include <QMainWindow>
+#include <QWidget>
 #include <QtCore>
 #include <videosurface.h>
 
@@ -32,6 +34,7 @@ public Q_SLOTS:
     void switchStatScript();
 
     void orientationChanged(Qt::ScreenOrientation orientation);
+    void changeOrientation();
 
     void checkIntentContent();
 
