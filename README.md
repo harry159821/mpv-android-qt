@@ -17,6 +17,9 @@ Mpv Android In Qt Project
 ## Screenshot
 ![](https://github.com/harry159821/mpv-android-qt/raw/master/screenshot/screenshot-2017-10-26-22-46-06.png)
 
+
+![](https://github.com/harry159821/mpv-android-qt/raw/master/screenshot/screenshot-2017-10-28-23-36-27.png)
+
 ## Prebuild so lib
 ffmpeg freetype2 fribidi gnutls libass lua mpv nettle
 

@@ -267,3 +267,18 @@ void MainWindow::switchStatScript()
     m_mpv->command(QVariantList() << "script-message" << "togglestats");
     //m_mpv->command(QVariantList() << "load-script" << configDir() + "stats.lua");
 }
+
+// animation/gesture actions
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    QWidget::mousePressEvent(event);
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *event)
+{
+    QWidget::mouseReleaseEvent(event);
+
+    this->oscWidget->triggerVisiableAnim();
+    qDebug() << "triggerVisiableAnim";
+}

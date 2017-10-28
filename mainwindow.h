@@ -50,6 +50,13 @@ public Q_SLOTS:
 
     void checkIntentContent();
 
+    // animation/gesture actions
+
+public Q_SLOTS:
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    //void mouseMoveEvent(QMouseEvent *event);
+
 private:
     Ui::MainWindow *ui;
 };

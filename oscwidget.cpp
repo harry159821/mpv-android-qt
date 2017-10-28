@@ -10,9 +10,13 @@ OscWidget::OscWidget(QWidget *parent) :
     playButton(nullptr),
     statButton(nullptr),
     progressSlider(nullptr),
+    m_opacity(1),
+    m_opacity_effect(nullptr),
     ui(new Ui::OscWidget)
 {
+
     ui->setupUi(this);
+    this->initAnmi();
 
     backgroundImage = new QImage(":/resource/OscWidgetbackground.9.png");
     backgroundImage9 = new TNinePatch(*backgroundImage);
@@ -53,3 +57,42 @@ void OscWidget::paintEvent(QPaintEvent* event)
 
     // QWidget::paintEvent(event);
 }
+
+void OscWidget::initAnmi()
+{
+    machine = new QStateMachine(this);
+    machine->setGlobalRestorePolicy(QStateMachine::RestoreProperties);
+    visiableState = new QState(machine);
+    visiableState->assignProperty(this, "opacity", 1);
+    invisiableState = new QState(machine);
+    visiableState->assignProperty(this, "opacity", 0);
+
+    anima = new QPropertyAnimation(this, "opacity", this);
+    anima->setDuration(240);
+    machine->addDefaultAnimation(anima);
+
+    invisiableState->addTransition(this, SIGNAL(showWithAnim_signal()), visiableState);
+    visiableState->addTransition(this, SIGNAL(hideWithAnim_signal()), invisiableState);
+
+    invisiableState->addTransition(this, SIGNAL(triggerVisiableAnim_signal()), visiableState);
+    visiableState->addTransition(this, SIGNAL(triggerVisiableAnim_signal()), invisiableState);
+
+    machine->setInitialState(invisiableState);
+    machine->start();
+}
+
+void OscWidget::hideWithAnim()
+{
+    emit this->hideWithAnim_signal();
+}
+
+void OscWidget::showWithAnim()
+{
+    emit this->showWithAnim_signal();
+}
+
+void OscWidget::triggerVisiableAnim()
+{
+    emit this->triggerVisiableAnim_signal();
+}
+
