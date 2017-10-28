@@ -22,7 +22,8 @@ static void *get_proc_address(void *ctx, const char *name)
 }
 
 VideoSurface::VideoSurface(QWidget *parent, Qt::WindowFlags f)
-    : QOpenGLWidget(parent, f)
+    :currentTime(0.0),
+    QOpenGLWidget(parent, f)
 {
     qDebug() << "HelloWorld, VideoSurface Create Start";
 
@@ -185,6 +186,7 @@ void VideoSurface::handle_mpv_event(mpv_event *event)
             if (prop->format == MPV_FORMAT_DOUBLE)
             {
                 double time = *(double *)prop->data;
+                currentTime = time;
                 emit positionChanged(time);
             }
         }

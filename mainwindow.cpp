@@ -13,6 +13,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
+    oscWidget(nullptr),
     ui(new Ui::MainWindow)
 {
     QString mpvConfigDir = configDir();
@@ -28,15 +29,17 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     ui->setupUi(this);
+    this->setupOscUi(this);
 
     m_mpv = ui->openGLWidget;
 
-    connect(ui->videoSlider, SIGNAL(sliderMoved(int)), SLOT(seek(int)));
-    connect(ui->pushButton, SIGNAL(clicked()), SLOT(openMedia()));
-    connect(ui->pushButton2, SIGNAL(clicked()), SLOT(pauseResume()));
-    connect(ui->pushButton3, SIGNAL(clicked()), SLOT(switchStatScript()));
-    connect(m_mpv, SIGNAL(positionChanged(int)), ui->videoSlider, SLOT(setValue(int)));
-    connect(m_mpv, SIGNAL(durationChanged(int)), this, SLOT(setSliderRange(int)));
+    connect(this->oscWidget->progressSlider, SIGNAL(sliderReleased()), SLOT(setSeekPosition()));
+    connect(this->oscWidget->progressSlider, SIGNAL(sliderPressed()), SLOT(setSliderNoResponFromMpv()));
+    connect(this->oscWidget->openFileButton, SIGNAL(clicked()), SLOT(openMedia()));
+    connect(this->oscWidget->playButton, SIGNAL(clicked()), SLOT(pauseResume()));
+    connect(this->oscWidget->statButton, SIGNAL(clicked()), SLOT(switchStatScript()));
+    connect(m_mpv, SIGNAL(positionChanged(double)), this, SLOT(setPosition(double)));
+    connect(m_mpv, SIGNAL(durationChanged(double)), this, SLOT(setSliderRange(double)));
 
     //Rotation
     QScreen *s = QGuiApplication::primaryScreen();
@@ -62,6 +65,33 @@ MainWindow::~MainWindow()
 QString MainWindow::configDir()
 {
     return "/storage/emulated/0/mpv/";
+}
+
+void MainWindow::setupOscUi(QWidget* wparent)
+{
+    int leftRightPadding = 20;
+    int bottomPadding = 160;
+    int width = this->width();
+    int height = this->height();
+
+    // osc
+    if(oscWidget == nullptr)
+    {
+        oscWidget = new OscWidget(wparent);
+    }
+    if(wparent->size() == oscWidget->currentParentSize)
+    {
+        return;
+    }
+
+    oscWidget->currentParentSize = wparent->size();
+    oscWidget->resize(width-2 * leftRightPadding, 220);
+    oscWidget->move(leftRightPadding, height - oscWidget->height() - bottomPadding);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    this->setupOscUi(this);
 }
 
 void MainWindow::checkIntentContent()
@@ -101,6 +131,12 @@ void MainWindow::checkIntentContent()
                     qDebug() << "This is a ANativeWindow " << awindow;
                     WId wid = winId();
                     qDebug() << "winid returned " << wid;
+
+                    // based on https://github.com/mpv-android/mpv-android/pull/53
+                    jobject surface_ = theSurface.object<jobject>();
+                    // surface = env->NewGlobalRef(surface_);
+                    int64_t Wid = (int64_t)(intptr_t) (jniEnv->NewGlobalRef(surface_));
+                    qDebug() << "Surface WID:" << Wid;
                 }
             }
         } else {
@@ -152,30 +188,58 @@ void MainWindow::pauseResume()
     m_mpv->setProperty("pause", !paused);
 }
 
-void MainWindow::setSliderRange(int duration)
+void MainWindow::setPosition(double position)
 {
-    ui->videoSlider->setRange(0, duration);
+    position = position * 10000;
+    this->oscWidget->progressSlider->setValue((int)position);
+}
+
+void MainWindow::setSliderRange(double duration)
+{
+    duration = duration * 10000;
+    this->oscWidget->progressSlider->setRange(0, (int)duration);
+}
+
+void MainWindow::setSliderNoResponFromMpv()
+{
+    disconnect(m_mpv, SIGNAL(positionChanged(double)), this, SLOT(setPosition(double)));
+}
+
+void MainWindow::setSeekPosition()
+{
+//    bool paused = false;
+//    paused = m_mpv->getProperty("pause").toBool();
+//    m_mpv->setProperty("pause", !paused);
+
+    double adjustTime = this->oscWidget->progressSlider->value()/10000.0 - m_mpv->currentTime;
+    m_mpv->command(QVariantList() << "seek" << adjustTime);
+
+//    paused = m_mpv->getProperty("pause").toBool();
+//    m_mpv->setProperty("pause", !paused);
+
+    // restore signal
+    connect(m_mpv, SIGNAL(positionChanged(double)), this, SLOT(setPosition(double)));
 }
 
 void MainWindow::orientationChanged(Qt::ScreenOrientation orientation)
 {
     qDebug("orientationChanged");
-    if(orientation == Qt::LandscapeOrientation || orientation == Qt::InvertedLandscapeOrientation)
-    {
-        ui->videoSlider->setVisible(false);
-        ui->pushButton->setVisible(false);
-        ui->pushButton2->setVisible(false);
-        ui->pushButton3->setVisible(false);
-        ui->horizontalLayout->setSpacing(0);
-    }
-    else
-    {
-        ui->videoSlider->setVisible(true);
-        ui->pushButton->setVisible(true);
-        ui->pushButton2->setVisible(true);
-        ui->pushButton3->setVisible(true);
-        ui->horizontalLayout->setSpacing(7);
-    }
+//    if(orientation == Qt::LandscapeOrientation || orientation == Qt::InvertedLandscapeOrientation)
+//    {
+//        ui->videoSlider->setVisible(false);
+//        ui->pushButton->setVisible(false);
+//        ui->pushButton2->setVisible(false);
+//        ui->pushButton3->setVisible(false);
+//        ui->horizontalLayout->setSpacing(0);
+//    }
+//    else
+//    {
+//        ui->videoSlider->setVisible(true);
+//        ui->pushButton->setVisible(true);
+//        ui->pushButton2->setVisible(true);
+//        ui->pushButton3->setVisible(true);
+//        ui->horizontalLayout->setSpacing(7);
+//    }
 }
 
 void MainWindow::changeOrientation()

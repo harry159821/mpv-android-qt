@@ -33,16 +33,21 @@ SOURCES += \
         mainwindow.cpp \
     videosurface.cpp \
     tools/androidfiledialog.cpp \
-    tools/qDebug2Logcat.cpp
+    tools/qDebug2Logcat.cpp \
+    oscwidget.cpp \
+    tools/ninepatch.cpp
 
 HEADERS += \
         mainwindow.h \
     videosurface.h \
     tools/androidfiledialog.h \
-    tools/qDebug2Logcat.h
+    tools/qDebug2Logcat.h \
+    oscwidget.h \
+    tools/ninepatch.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    oscwidget.ui
 
 CONFIG += mobility
 MOBILITY = 

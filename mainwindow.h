@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QtCore>
 #include <videosurface.h>
+#include "oscwidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,11 +24,22 @@ public:
 
     QString configDir();
 
+    void setupOscUi(QWidget* wparent);
+
+    // osc
+    OscWidget *oscWidget;
+    void resizeEvent(QResizeEvent *event);
+
 public Q_SLOTS:
     void openMedia();
     void openFileNameReady(QString);
     void seek(int);
-    void setSliderRange(int);
+
+    void setPosition(double);
+    void setSliderRange(double);
+
+    void setSliderNoResponFromMpv();
+    void setSeekPosition();
     
     void pauseResume();
     void switchSub();

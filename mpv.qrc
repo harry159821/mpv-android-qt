@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>resource/DroidSans.ttf</file>
+        <file>resource/OscWidgetbackground.9.png</file>
     </qresource>
 </RCC>

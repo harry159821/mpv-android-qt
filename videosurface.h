@@ -21,9 +21,11 @@ public:
     QVariant getProperty(const QString& name) const;
     QSize sizeHint() const { return QSize(480, 270);}
 
+    double currentTime;
+
 signals:
-    void durationChanged(int value);
-    void positionChanged(int value);
+    void durationChanged(double value);
+    void positionChanged(double value);
 
 protected:
     void initializeGL() Q_DECL_OVERRIDE;
