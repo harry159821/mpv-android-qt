@@ -1,104 +1,93 @@
 <?xml version="1.0"?>
-<manifest package="com.harry.mpv" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="0.1.1" android:versionCode="1" android:installLocation="auto">
-    <application
-        android:hardwareAccelerated="true"
-        android:name="org.qtproject.qt5.android.bindings.QtApplication"
-        android:label="-- %%INSERT_APP_NAME%% --"
-        android:theme = "@style/Theme.AppStartLoadTranslucent"
-        android:icon="@drawable/icon">
-        <activity
-            android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation"
-            android:name="com.harry.mpv.QtFullscreenActivity"
-            android:label="-- %%INSERT_APP_NAME%% --"
-            android:screenOrientation="user"
-            android:theme="@style/Theme.AppStartLoad"
-            android:launchMode="singleTop">
+<manifest package="com.harry.mpv" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="0.1.3" android:versionCode="1" android:installLocation="auto">
+    <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="-- %%INSERT_APP_NAME%% --" android:theme="@style/Theme.AppStartLoadTranslucent" android:icon="@drawable/icon">
+        <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="com.harry.mpv.QtFullscreenActivity" android:label="-- %%INSERT_APP_NAME%% --" android:screenOrientation="user" android:theme="@style/Theme.AppStartLoad" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
             <intent-filter> <!-- MIME type only (e.g. Google Drive) -->
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
 
-                <data android:mimeType="video/*" />
-                <data android:mimeType="audio/*" />
+                <data android:mimeType="video/*"/>
+                <data android:mimeType="audio/*"/>
             </intent-filter>
             <intent-filter> <!-- HTTP(S) with MIME type (#43) -->
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
 
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:host="*" />
-                <data android:mimeType="video/*" />
-                <data android:mimeType="audio/*" />
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:host="*"/>
+                <data android:mimeType="video/*"/>
+                <data android:mimeType="audio/*"/>
             </intent-filter>
             <intent-filter> <!-- HTTP(S) with extension (e.g. Chrome) -->
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:host="*" />
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:host="*"/>
                 <!-- the duplicate patterns below work around an Android bug: -->
                 <!-- http://stackoverflow.com/questions/3400072/#answer-8599921 -->
-                <data android:pathPattern=".*\\.mkv" />
-                <data android:pathPattern=".*\\..*\\.mkv" />
-                <data android:pathPattern=".*\\..*\\..*\\.mkv" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\.mkv" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.mkv" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.mkv" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.mkv" />
-                <data android:pathPattern=".*\\.mp4" />
-                <data android:pathPattern=".*\\..*\\.mp4" />
-                <data android:pathPattern=".*\\..*\\..*\\.mp4" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\.mp4" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.mp4" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.mp4" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.mp4" />
-                <data android:pathPattern=".*\\.webm" />
-                <data android:pathPattern=".*\\..*\\.webm" />
-                <data android:pathPattern=".*\\..*\\..*\\.webm" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\.webm" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.webm" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.webm" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.webm" />
-                <data android:pathPattern=".*\\.avi" />
-                <data android:pathPattern=".*\\..*\\.avi" />
-                <data android:pathPattern=".*\\..*\\..*\\.avi" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\.avi" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.avi" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.avi" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.avi" />
-                <data android:pathPattern=".*\\.flac" />
-                <data android:pathPattern=".*\\..*\\.flac" />
-                <data android:pathPattern=".*\\..*\\..*\\.flac" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\.flac" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.flac" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.flac" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.flac" />
-                <data android:pathPattern=".*\\.mp3" />
-                <data android:pathPattern=".*\\..*\\.mp3" />
-                <data android:pathPattern=".*\\..*\\..*\\.mp3" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\.mp3" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.mp3" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.mp3" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.mp3" />
-                <data android:pathPattern=".*\\.ogg" />
-                <data android:pathPattern=".*\\..*\\.ogg" />
-                <data android:pathPattern=".*\\..*\\..*\\.ogg" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\.ogg" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.ogg" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.ogg" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.ogg" />
+                <data android:pathPattern=".*\\.mkv"/>
+                <data android:pathPattern=".*\\..*\\.mkv"/>
+                <data android:pathPattern=".*\\..*\\..*\\.mkv"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.mkv"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.mkv"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.mkv"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.mkv"/>
+                <data android:pathPattern=".*\\.mp4"/>
+                <data android:pathPattern=".*\\..*\\.mp4"/>
+                <data android:pathPattern=".*\\..*\\..*\\.mp4"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.mp4"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.mp4"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.mp4"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.mp4"/>
+                <data android:pathPattern=".*\\.webm"/>
+                <data android:pathPattern=".*\\..*\\.webm"/>
+                <data android:pathPattern=".*\\..*\\..*\\.webm"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.webm"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.webm"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.webm"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.webm"/>
+                <data android:pathPattern=".*\\.avi"/>
+                <data android:pathPattern=".*\\..*\\.avi"/>
+                <data android:pathPattern=".*\\..*\\..*\\.avi"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.avi"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.avi"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.avi"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.avi"/>
+                <data android:pathPattern=".*\\.flac"/>
+                <data android:pathPattern=".*\\..*\\.flac"/>
+                <data android:pathPattern=".*\\..*\\..*\\.flac"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.flac"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.flac"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.flac"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.flac"/>
+                <data android:pathPattern=".*\\.mp3"/>
+                <data android:pathPattern=".*\\..*\\.mp3"/>
+                <data android:pathPattern=".*\\..*\\..*\\.mp3"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.mp3"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.mp3"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.mp3"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.mp3"/>
+                <data android:pathPattern=".*\\.ogg"/>
+                <data android:pathPattern=".*\\..*\\.ogg"/>
+                <data android:pathPattern=".*\\..*\\..*\\.ogg"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.ogg"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.ogg"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.ogg"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.ogg"/>
             </intent-filter>
-            
+
             <!-- Application arguments -->
             <!-- meta-data android:name="android.app.arguments" android:value="arg1 arg2 arg3"/ -->
             <!-- Application arguments -->
