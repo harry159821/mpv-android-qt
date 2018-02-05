@@ -59,7 +59,7 @@ VideoSurface::VideoSurface(QWidget *parent, Qt::WindowFlags f)
     mpv::qt::set_option_variant(mpv, "vo", "opengl-cb");
 
     // Request hw decoding, just for testing.
-    mpv::qt::set_option_variant(mpv, "hwdec", "auto");
+    mpv::qt::set_option_variant(mpv, "hwdec", "mediacodec-copy");
 
     mpv_gl = (mpv_opengl_cb_context *)mpv_get_sub_api(mpv, MPV_SUB_API_OPENGL_CB);
     if (!mpv_gl)
